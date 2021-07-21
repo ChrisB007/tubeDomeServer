@@ -27,6 +27,14 @@ mongoose
     console.log(error);
   });
 
+//routes
+
+app.get("/", () => {
+  res.send({
+    appName: "tuberDome",
+  });
+});
+
 app.listen(PORT, () => {
   console.log(`tuberDome is listening at port: ${PORT}`);
   rowdyLogger.print();
