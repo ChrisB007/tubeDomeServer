@@ -29,7 +29,7 @@ mongoose
 
 //routes
 
-app.get("/", () => {
+app.get("/", (req, res) => {
   res.send({
     appName: "tuberDome",
   });
