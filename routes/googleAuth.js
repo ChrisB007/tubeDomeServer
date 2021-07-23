@@ -5,8 +5,17 @@ const cookieSession = require("cookie-session");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 require("dotenv").config();
 
-//Passport Login
+//middleware
+router.use(
+  cookieSession({
+    maxAge: 30 * 24 * 60 * 60 * 1000,
+    keys: [process.env.COOKIE_KEYS],
+  })
+);
+router.use(passport.initialize());
+router.use(passport.session());
 
+//Passport Login
 //Google Auth
 const googleClientID = process.env.GOOGLE_CLIENT_ID;
 const googleClientSecret = process.env.GOOGLE_CLIENT_SECRET;
@@ -27,6 +36,7 @@ passport.use(
       clientID: googleClientID,
       clientSecret: googleClientSecret,
       callbackURL: "/auth/google/callback",
+      proxy: true,
     },
     (accessToken, refreshToken, profile, done) => {
       googleUser
@@ -55,13 +65,13 @@ passport.use(
 );
 
 router.get(
-  "/google",
+  "/",
   passport.authenticate("google", {
     scope: ["profile", "email"],
   })
 );
 
-router.get("/", passport.authenticate("google"));
+router.get("/callback", passport.authenticate("google"));
 
 router.get("/logout", (req, res) => {
   req.logout();
